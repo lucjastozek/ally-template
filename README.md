@@ -69,7 +69,3 @@ This project uses Yarn and Vite. Here's a breakdown of what each script does:
 - `yarn format:check` - Checks if files are formatted correctly (fails if not).
 - `yarn lint` - Runs ESLint. Fails on any warning or error.
 - `yarn type-check` - Checks TypeScript types without emitting any files.
-
-```
-
-```
