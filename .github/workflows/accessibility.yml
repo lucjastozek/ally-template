@@ -209,14 +209,41 @@ jobs:
           lhci autorun --debug || true
           echo "Lighthouse CI completed (exit code: $?)"
 
+      - name: Collect Lighthouse artifacts
+        if: always()
+        run: |
+          # Create lighthouse-results directory for artifacts
+          mkdir -p lighthouse-results
+
+          # Copy any generated reports
+          if [ -d ".lighthouseci" ]; then
+            cp -r .lighthouseci/* lighthouse-results/ 2>/dev/null || true
+          fi
+
+          # Copy any lhci reports
+          if [ -d "lhci_reports" ]; then
+            cp -r lhci_reports/* lighthouse-results/ 2>/dev/null || true
+          fi
+
+          # Create a summary file with the URLs that were tested
+          echo "Lighthouse CI Results Summary" > lighthouse-results/summary.txt
+          echo "=============================" >> lighthouse-results/summary.txt
+          echo "Tested URLs:" >> lighthouse-results/summary.txt
+          cat lighthouserc.json | grep -A 10 '"url"' >> lighthouse-results/summary.txt
+          echo "" >> lighthouse-results/summary.txt
+          echo "Generated at: $(date)" >> lighthouse-results/summary.txt
+          echo "Commit: ${{ github.sha }}" >> lighthouse-results/summary.txt
+
+          # List what we collected
+          echo "Lighthouse artifacts collected:"
+          ls -la lighthouse-results/ || echo "No lighthouse artifacts found"
+
       - name: Upload Lighthouse results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-results
-          path: |
-            .lighthouseci/
-            lhci_reports/
+          path: lighthouse-results/
 
   pa11y:
     name: Pa11y Accessibility Testing
