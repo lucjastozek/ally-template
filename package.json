@@ -10,7 +10,13 @@
     "format:check": "prettier --check .",
     "lint": "eslint --max-warnings=0 .",
     "start": "vite --port 3000",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "extract-routes": "node scripts/extract-routes.js",
+    "update-lighthouse-config": "node scripts/update-lighthouse-config.js && yarn prettier ./lighthouserc.json --write",
+    "a11y:axe": "node scripts/run-axe.js",
+    "a11y:pa11y": "node scripts/run-pa11y.js",
+    "a11y:lighthouse": "node scripts/update-lighthouse-config.js && lhci autorun",
+    "a11y:all": "concurrently \"yarn a11y:axe\" \"yarn a11y:pa11y\" \"yarn a11y:lighthouse\""
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -18,14 +24,19 @@
     "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.10.0",
     "@eslint/js": "^9.11.1",
+    "@lhci/cli": "^0.13.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
+    "concurrently": "^8.2.2",
     "eslint": "^9.11.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
+    "pa11y": "^8.0.0",
+    "prettier": "^3.0.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.7.0",
     "vite": "^5.4.8",
