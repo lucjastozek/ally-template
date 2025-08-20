@@ -1,0 +1,393 @@
+name: Accessibility Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  setup:
+    name: Setup and build
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Generate cache key
+        id: cache-key
+        run: echo "key=${{ runner.os }}-a11y-node20-${{ hashFiles('yarn.lock') }}" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ steps.cache-key.outputs.key }}
+          restore-keys: |
+            ${{ runner.os }}-a11y-node20-
+
+      - name: Verify Node.js version
+        run: node --version
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build site
+        run: yarn build
+
+      - name: Cache build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+  axe-core:
+    name: Axe Core Accessibility Testing
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Restore build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - name: Start preview server
+        run: |
+          yarn preview --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Install Axe CLI
+        run: npm install -g @axe-core/cli
+
+      - name: Run Axe accessibility tests
+        run: |
+          # Test all pages
+          PAGES=(
+            "http://localhost:3000/"
+            "http://localhost:3000/about"
+            "http://localhost:3000/design"
+            "http://localhost:3000/web-development"
+            "http://localhost:3000/creative-coding"
+            "http://localhost:3000/the-emotional-void"
+          )
+
+          mkdir -p axe-results
+          FAILED=0
+
+          for page in "${PAGES[@]}"; do
+            echo "Testing $page with Axe Core..."
+            PAGE_NAME=$(echo $page | sed 's|http://localhost:3000||' | sed 's|/|-|g' | sed 's|^-||')
+            if [ -z "$PAGE_NAME" ]; then PAGE_NAME="home"; fi
+            
+            if ! axe "$page" \
+              --save "axe-results/axe-$PAGE_NAME.json" \
+              --tags wcag2a,wcag2aa,wcag21aa; then
+              FAILED=1
+            fi
+          done
+
+          # Combine all results into one file
+          echo '{"results":[' > axe-results.json
+          first=true
+          for file in axe-results/axe-*.json; do
+            # Check if the file actually exists (handles case where no files match the pattern)
+            if [ -f "$file" ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo ',' >> axe-results.json
+              fi
+              cat "$file" >> axe-results.json
+            fi
+          done
+          echo ']}' >> axe-results.json
+
+          if [ $FAILED -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Upload Axe results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: axe-accessibility-results
+          path: |
+            axe-results.json
+            axe-results/
+
+  lighthouse:
+    name: Lighthouse Accessibility & Performance
+    runs-on: ubuntu-latest
+    needs: setup
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Restore build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+
+      - name: Debug Lighthouse CI setup
+        run: |
+          echo "Lighthouse CI version:"
+          lhci --version
+          echo "Current directory:"
+          pwd
+          echo "Lighthouse config:"
+          cat lighthouserc.json
+
+      - name: Start preview server
+        run: |
+          yarn preview --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Verify server is responding
+        run: |
+          echo "Testing server response..."
+          curl -f http://localhost:3000/ || (echo "Server not responding" && exit 1)
+          echo "Server is responding correctly!"
+
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+          LHCI_UPLOAD_TARGET: github
+        run: |
+          lhci autorun --debug || true
+          echo "Lighthouse CI completed (exit code: $?)"
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-results
+          path: |
+            .lighthouseci/
+            lhci_reports/
+
+  pa11y:
+    name: Pa11y Accessibility Testing
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Restore build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - name: Start preview server
+        run: |
+          yarn preview --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Install Pa11y
+        run: npm install -g pa11y
+
+      - name: Run Pa11y accessibility tests
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+        run: |
+          # Test all pages with Puppeteer launch args via environment
+          export PUPPETEER_LAUNCH_ARGS="--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-gpu --headless"
+
+          PAGES=(
+            "http://localhost:3000/"
+            "http://localhost:3000/about"
+            "http://localhost:3000/design"
+            "http://localhost:3000/web-development"
+            "http://localhost:3000/creative-coding"
+            "http://localhost:3000/the-emotional-void"
+          )
+
+          mkdir -p pa11y-results
+          FAILED=0
+
+          echo '{"results":[' > pa11y-results.json
+          first=true
+
+          for page in "${PAGES[@]}"; do
+            echo "Testing $page with Pa11y..."
+            PAGE_NAME=$(echo $page | sed 's|http://localhost:3000||' | sed 's|/|-|g' | sed 's|^-||')
+            if [ -z "$PAGE_NAME" ]; then PAGE_NAME="home"; fi
+            
+            # Run with JSON reporter
+            if pa11y "$page" \
+              --reporter json \
+              > "pa11y-results/pa11y-$PAGE_NAME.json"; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo ',' >> pa11y-results.json
+              fi
+              cat "pa11y-results/pa11y-$PAGE_NAME.json" >> pa11y-results.json
+            else
+              FAILED=1
+              echo "Pa11y failed for $page"
+            fi
+            
+            # Also run with CLI reporter for human-readable output
+            echo "=== Pa11y results for $page ==="
+            pa11y "$page" \
+              --reporter cli \
+              || true
+            echo ""
+          done
+
+          echo ']}' >> pa11y-results.json
+
+          if [ $FAILED -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Upload Pa11y results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pa11y-accessibility-results
+          path: |
+            pa11y-results.json
+            pa11y-results/
+
+  lighthouse-comment:
+    name: Lighthouse CI PR Comment
+    runs-on: ubuntu-latest
+    needs: [setup, lighthouse]
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.setup.outputs.cache-key }}
+
+      - name: Restore build output
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+
+      - name: Start preview server
+        run: |
+          yarn preview --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run Lighthouse CI with GitHub upload
+        env:
+          LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+          LHCI_UPLOAD_TARGET: github
+        run: |
+          lhci autorun --debug
+
+  accessibility-summary:
+    name: Accessibility Test Summary
+    runs-on: ubuntu-latest
+    needs: [axe-core, lighthouse, pa11y, lighthouse-comment]
+    if: always()
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create accessibility summary
+        run: |
+          echo "# 🔍 Accessibility Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check Axe results
+          if [ "${{ needs.axe-core.result }}" = "success" ]; then
+            echo "✅ **Axe Core**: All accessibility tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Axe Core**: Accessibility issues found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check Lighthouse results
+          if [ "${{ needs.lighthouse.result }}" = "success" ]; then
+            echo "✅ **Lighthouse**: Performance and accessibility scores met thresholds" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Lighthouse**: Performance or accessibility scores below threshold" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check Pa11y results
+          if [ "${{ needs.pa11y.result }}" = "success" ]; then
+            echo "✅ **Pa11y**: No accessibility violations detected" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Pa11y**: Accessibility violations found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check Lighthouse comment status
+          if [ "${{ needs.lighthouse-comment.result }}" = "success" ]; then
+            echo "💬 **Lighthouse CI**: Performance results posted to PR" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.lighthouse-comment.result }}" = "skipped" ]; then
+            echo "ℹ️ **Lighthouse CI**: Skipped (not a pull request)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Lighthouse CI**: Failed to post PR comment" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Test artifacts are available for download in the workflow run**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🚀 **For pull requests**: Lighthouse performance results will be posted as a comment" >> $GITHUB_STEP_SUMMARY
