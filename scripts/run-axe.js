@@ -9,10 +9,18 @@ import { extractRoutesFromRouter } from "./extract-routes.js";
 const BASE_URL = "http://localhost:3000";
 
 async function runAxeOnRoutes() {
+  let routes;
   try {
-    const routes = extractRoutesFromRouter();
+    routes = extractRoutesFromRouter();
+  } catch (error) {
+    console.error("Error extracting routes from Router.tsx:", error.message);
+    console.log("Falling back to root route only");
+    routes = ["/"];
+  }
+
+  try {
     console.log(
-      `Running Axe on ${routes.length} route(s): ${routes.join(", ")}`,
+      `Running Axe on ${routes.length} route(s): ${routes.join(", ")}`
     );
 
     let hasErrors = false;

@@ -29,7 +29,16 @@ function updateLighthouseUrls() {
     process.exit(1);
   }
 
-  const routes = extractRoutesFromRouter();
+  let routes;
+
+  try {
+    routes = extractRoutesFromRouter();
+  } catch (error) {
+    console.error("Error extracting routes from Router.tsx:", error.message);
+    console.log("Falling back to root route only");
+    routes = ["/"];
+  }
+
   const baseUrl = "http://localhost:3000";
   const urls = routes.map((route) => `${baseUrl}${route}`);
 

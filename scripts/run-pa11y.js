@@ -9,10 +9,18 @@ import { extractRoutesFromRouter } from "./extract-routes.js";
 const BASE_URL = "http://localhost:3000";
 
 async function runPa11yOnRoutes() {
+  let routes;
   try {
-    const routes = extractRoutesFromRouter();
+    routes = extractRoutesFromRouter();
+  } catch (error) {
+    console.error("Error extracting routes from Router.tsx:", error.message);
+    console.log("Falling back to root route only");
+    routes = ["/"];
+  }
+
+  try {
     console.log(
-      `Running Pa11y on ${routes.length} route(s): ${routes.join(", ")}`,
+      `Running Pa11y on ${routes.length} route(s): ${routes.join(", ")}`
     );
 
     let hasErrors = false;
@@ -37,7 +45,7 @@ async function runPa11yOnRoutes() {
           {
             stdio: "inherit",
             shell: true,
-          },
+          }
         );
 
         pa11y.on("close", (code) => {

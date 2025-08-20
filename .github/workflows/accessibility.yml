@@ -206,7 +206,7 @@ jobs:
           LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
           LHCI_UPLOAD_TARGET: github
         run: |
-          lhci autorun --debug || true
+          lhci autorun --debug
           echo "Lighthouse CI completed (exit code: $?)"
 
       - name: Collect Lighthouse artifacts

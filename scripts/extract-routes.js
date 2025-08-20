@@ -65,11 +65,9 @@ function main() {
     }
   } catch (error) {
     console.error("Error extracting routes:", error.message);
-    console.log("/");
     process.exit(1);
   }
 }
-
 main();
 
 export { extractRoutesFromRouter };
