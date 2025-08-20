@@ -284,8 +284,8 @@ jobs:
             if [ -z "$PAGE_NAME" ]; then PAGE_NAME="home"; fi
             
             # Run with JSON reporter
-            if pa11y "$url" 
-              --reporter json 
+            if pa11y "$url" \
+              --reporter json \
               > "pa11y-results/pa11y-$PAGE_NAME.json"; then
               if [ "$first" = true ]; then
                 first=false
@@ -300,8 +300,8 @@ jobs:
             
             # Also run with CLI reporter for human-readable output
             echo "=== Pa11y results for $url ==="
-            pa11y "$url" 
-              --reporter cli 
+            pa11y "$url" \
+              --reporter cli \
               || true
             echo ""
           done
