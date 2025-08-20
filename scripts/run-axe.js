@@ -20,7 +20,7 @@ async function runAxeOnRoutes() {
 
   try {
     console.log(
-      `Running Axe on ${routes.length} route(s): ${routes.join(", ")}`
+      `Running Axe on ${routes.length} route(s): ${routes.join(", ")}`,
     );
 
     let hasErrors = false;
