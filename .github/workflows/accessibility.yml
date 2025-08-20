@@ -508,4 +508,3 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "📊 **Test artifacts are available for download in the workflow run**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "� **For pull requests**: Comprehensive accessibility results are posted as PR comments" >> $GITHUB_STEP_SUMMARY
