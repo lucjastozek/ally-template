@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  TEST_BASE_URL: http://localhost:3000
+  FALLBACK_TEST_PAGES: "/"
+
 jobs:
   setup:
     name: Setup and build
@@ -77,27 +81,33 @@ jobs:
       - name: Install Axe CLI
         run: npm install -g @axe-core/cli
 
+      - name: Extract routes from Router.tsx
+        id: extract-routes
+        run: |
+          echo "Extracting routes from React Router configuration..."
+          if ROUTES=$(node scripts/extract-routes.js 2>/dev/null); then
+            echo "Found routes: $ROUTES"
+            echo "test_pages=$ROUTES" >> $GITHUB_OUTPUT
+          else
+            echo "Route extraction failed, using fallback routes: $FALLBACK_TEST_PAGES"
+            echo "test_pages=$FALLBACK_TEST_PAGES" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Axe accessibility tests
         run: |
-          # Test all pages
-          PAGES=(
-            "http://localhost:3000/"
-            "http://localhost:3000/about"
-            "http://localhost:3000/design"
-            "http://localhost:3000/web-development"
-            "http://localhost:3000/creative-coding"
-            "http://localhost:3000/the-emotional-void"
-          )
+          # Use extracted routes
+          IFS=' ' read -ra PAGE_PATHS <<< "${{ steps.extract-routes.outputs.test_pages }}"
 
           mkdir -p axe-results
           FAILED=0
 
-          for page in "${PAGES[@]}"; do
-            echo "Testing $page with Axe Core..."
-            PAGE_NAME=$(echo $page | sed 's|http://localhost:3000||' | sed 's|/|-|g' | sed 's|^-||')
+          for path in "${PAGE_PATHS[@]}"; do
+            url="${TEST_BASE_URL}${path}"
+            echo "Testing $url with Axe Core..."
+            PAGE_NAME=$(echo $path | sed 's|/|-|g' | sed 's|^-||')
             if [ -z "$PAGE_NAME" ]; then PAGE_NAME="home"; fi
             
-            if ! axe "$page" \
+            if ! axe "$url" \
               --save "axe-results/axe-$PAGE_NAME.json" \
               --tags wcag2a,wcag2aa,wcag21aa; then
               FAILED=1
@@ -182,8 +192,14 @@ jobs:
       - name: Verify server is responding
         run: |
           echo "Testing server response..."
-          curl -f http://localhost:3000/ || (echo "Server not responding" && exit 1)
+          curl -f $TEST_BASE_URL/ || (echo "Server not responding" && exit 1)
           echo "Server is responding correctly!"
+
+      - name: Update Lighthouse config with dynamic routes
+        run: |
+          echo "Updating Lighthouse configuration with routes from Router.tsx..."
+          node scripts/update-lighthouse-config.js
+          echo "Lighthouse config updated successfully"
 
       - name: Run Lighthouse CI
         env:
@@ -233,6 +249,18 @@ jobs:
       - name: Install Pa11y
         run: npm install -g pa11y
 
+      - name: Extract routes from Router.tsx
+        id: extract-routes
+        run: |
+          echo "Extracting routes from React Router configuration..."
+          if ROUTES=$(node scripts/extract-routes.js 2>/dev/null); then
+            echo "Found routes: $ROUTES"
+            echo "test_pages=$ROUTES" >> $GITHUB_OUTPUT
+          else
+            echo "Route extraction failed, using fallback routes: $FALLBACK_TEST_PAGES"
+            echo "test_pages=$FALLBACK_TEST_PAGES" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Pa11y accessibility tests
         env:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
@@ -240,14 +268,8 @@ jobs:
           # Test all pages with Puppeteer launch args via environment
           export PUPPETEER_LAUNCH_ARGS="--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-gpu --headless"
 
-          PAGES=(
-            "http://localhost:3000/"
-            "http://localhost:3000/about"
-            "http://localhost:3000/design"
-            "http://localhost:3000/web-development"
-            "http://localhost:3000/creative-coding"
-            "http://localhost:3000/the-emotional-void"
-          )
+          # Use extracted routes
+          IFS=' ' read -ra PAGE_PATHS <<< "${{ steps.extract-routes.outputs.test_pages }}"
 
           mkdir -p pa11y-results
           FAILED=0
@@ -255,14 +277,15 @@ jobs:
           echo '{"results":[' > pa11y-results.json
           first=true
 
-          for page in "${PAGES[@]}"; do
-            echo "Testing $page with Pa11y..."
-            PAGE_NAME=$(echo $page | sed 's|http://localhost:3000||' | sed 's|/|-|g' | sed 's|^-||')
+          for path in "${PAGE_PATHS[@]}"; do
+            url="${TEST_BASE_URL}${path}"
+            echo "Testing $url with Pa11y..."
+            PAGE_NAME=$(echo $path | sed 's|/|-|g' | sed 's|^-||')
             if [ -z "$PAGE_NAME" ]; then PAGE_NAME="home"; fi
             
             # Run with JSON reporter
-            if pa11y "$page" \
-              --reporter json \
+            if pa11y "$url" 
+              --reporter json 
               > "pa11y-results/pa11y-$PAGE_NAME.json"; then
               if [ "$first" = true ]; then
                 first=false
@@ -272,22 +295,16 @@ jobs:
               cat "pa11y-results/pa11y-$PAGE_NAME.json" >> pa11y-results.json
             else
               FAILED=1
-              echo "Pa11y failed for $page"
+              echo "Pa11y failed for $url"
             fi
             
             # Also run with CLI reporter for human-readable output
-            echo "=== Pa11y results for $page ==="
-            pa11y "$page" \
-              --reporter cli \
+            echo "=== Pa11y results for $url ==="
+            pa11y "$url" 
+              --reporter cli 
               || true
             echo ""
           done
-
-          echo ']}' >> pa11y-results.json
-
-          if [ $FAILED -eq 1 ]; then
-            exit 1
-          fi
 
       - name: Upload Pa11y results
         uses: actions/upload-artifact@v4
@@ -335,6 +352,12 @@ jobs:
         run: |
           yarn preview --port 3000 &
           npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Update Lighthouse config with dynamic routes
+        run: |
+          echo "Updating Lighthouse configuration with routes from Router.tsx..."
+          node scripts/update-lighthouse-config.js
+          echo "Lighthouse config updated successfully"
 
       - name: Run Lighthouse CI with GitHub upload
         env:

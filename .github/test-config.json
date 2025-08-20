@@ -1,0 +1,5 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "note": "This file is auto-generated. Routes are extracted from src/Router.tsx",
+  "testPages": ["/"]
+}
