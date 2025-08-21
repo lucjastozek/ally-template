@@ -50,7 +50,18 @@ export default function HomePage(): JSX.Element {
 
   return (
     <div className="app">
-      <a href="#main-content" className="skip-link">
+      <a
+        href="#main-content"
+        className="skip-link"
+        onClick={(e) => {
+          e.preventDefault();
+          const main = document.getElementById("main-content");
+          if (main) {
+            main.setAttribute("tabindex", "-1");
+            main.focus();
+          }
+        }}
+      >
         Skip to main content
       </a>
       <header className="page-header">
@@ -64,7 +75,7 @@ export default function HomePage(): JSX.Element {
           <em>Built with accessibility in mind, designed with heart</em>
         </p>
       </header>
-      <main id="main-content" className="page-content">
+      <main id="main-content" className="page-content" tabIndex={-1}>
         <section aria-labelledby="intro-heading" className="section">
           <h2 id="intro-heading">What makes this template special?</h2>
           <p>
