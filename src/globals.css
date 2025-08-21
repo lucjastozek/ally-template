@@ -239,7 +239,7 @@ button:disabled:hover:before {
     --bg: #fffbe6;
     --bgRgb: 255, 251, 230;
     --fg: #050505;
-    --fgRgb: 05, 05, 05;
+    --fgRgb: 5, 5, 5;
     --red: #992f1e;
     --orange: #913c03;
     --orangeRgb: 145, 60, 3;

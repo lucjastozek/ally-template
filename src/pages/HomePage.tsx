@@ -35,7 +35,7 @@ const lightModeColors = [
 
 export default function HomePage(): JSX.Element {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (window) {
+    if (typeof window !== "undefined") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 
@@ -132,7 +132,7 @@ export default function HomePage(): JSX.Element {
         <section aria-labelledby="color-heading" className="section">
           <h2 id="color-heading">Complete Color Palette</h2>
           <p>
-            This template features a comprehensive color system features 24
+            This template features a comprehensive color system with 24
             carefully chosen colors that maintain excellent contrast ratios and
             accessibility standards in both light and dark modes.
           </p>
