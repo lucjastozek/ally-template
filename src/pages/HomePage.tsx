@@ -53,20 +53,18 @@ export default function HomePage(): JSX.Element {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-
+      <header className="page-header">
+        <h1>Welcome!</h1>
+        <p>
+          This is a warm and accessible React template built with Vite. It's
+          designed with love, using beautiful colors and thoughtful
+          accessibility practices.
+        </p>
+        <p>
+          <em>Built with accessibility in mind, designed with heart</em>
+        </p>
+      </header>
       <main id="main-content" className="page-content">
-        <div className="page-header">
-          <h1>Welcome!</h1>
-          <p>
-            This is a warm and accessible React template built with Vite. It's
-            designed with love, using beautiful colors and thoughtful
-            accessibility practices.
-          </p>
-          <p>
-            <em>Built with accessibility in mind, designed with heart</em>
-          </p>
-        </div>
-
         <section aria-labelledby="intro-heading" className="section">
           <h2 id="intro-heading">What makes this template special?</h2>
           <p>

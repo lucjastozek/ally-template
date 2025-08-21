@@ -1,7 +1,9 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://localhost:3000/"],
+      "url": [
+        "http://localhost:3000/"
+      ],
       "numberOfRuns": 1,
       "settings": {
         "chromeFlags": "--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-gpu --headless"
@@ -59,7 +61,9 @@
     },
     "healthcheck": {
       "fatal": false,
-      "checks": ["githubToken"]
+      "checks": [
+        "githubToken"
+      ]
     }
   }
 }
