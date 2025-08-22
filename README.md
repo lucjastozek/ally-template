@@ -1,46 +1,65 @@
-# React + Vite template
+# Ally template
+
+React + Vite template with a focus on accessibility 🩷
 
 ## General Info
 
 This project is built with:
 
-- Vite – for fast dev and build tooling
-- React – component-based frontend framework
-- TypeScript – static typing for sanity
-- React Router DOM – for client-side routing
+- Vite
+- React
+- TypeScript
+- React Router DOM
 
-### Project Structure
-
-The code follows a modular and clear file structure:
-
-```
-
-~/
-├── public/
-├── src/
-│   ├── components/
-│   │   └── Component tsx files
-│   ├── pages/
-│   │   └── Pages tsx files
-│   ├── App.css - Styles for App.tsx
-│   ├── App.tsx - Root component
-│   ├── index.css - Global styles
-│   ├── main.tsx - Entry point, mounts <App />
-│   ├── Router.tsx - Routing logic (React Router)
-
-```
-
-Routing is handled in `Router.tsx` using `react-router-dom`. Each page in `src/pages` maps to a route, and components in `src/components` are used across the app as building blocks.
-
-You can run the app in dev mode using:
+You don’t need to clone this template manually. You can scaffold a new project using an npx script:
 
 ```bash
-yarn start
+npx create-ally-app
 ```
 
-## Scripts
+## Accessibility Features
 
-This project uses Yarn and Vite. Here's a breakdown of what each script does:
+This template comes with a full suite of accessibility (a11y) features to ensure your application meets WCAG standards and provides an inclusive user experience. It includes:
+
+- **Scripts for accessibility testing** using [Axe](https://github.com/dequelabs/axe-core), [Pa11y](https://pa11y.org/) and [Lighthouse](https://github.com/GoogleChrome/lighthouse-ci), integrated with GitHub Actions
+- **Static accessibility checks** via the `eslint-plugin-jsx-a11y` ESLint plugin
+- **Example code** demonstrating accessible components, end-to-end accessibility testing, and color palettes with WCAG-compliant contrast ratios for both light and dark modes
+
+### Scripts
+
+```bash
+# Run all accessibility tests
+yarn a11y:all
+
+# Run individual accessibility tests
+yarn a11y:axe        # Test with Axe Core
+yarn a11y:pa11y      # Test with Pa11y
+yarn a11y:lighthouse # Test with Lighthouse CI
+
+# Update Lighthouse config with current routes
+yarn update-lighthouse-config
+```
+
+### GitHub Actions Integration
+
+The repository includes automated accessibility testing in CI/CD:
+
+- **Pull Request Comments** - Lighthouse CI posts performance and accessibility results directly to PRs
+- **Multiple Tools** - Each PR is tested with Axe, Pa11y, and Lighthouse
+
+### Local Development
+
+Before pushing changes, you can run accessibility tests locally:
+
+```bash
+# Start your dev server
+yarn start
+
+# In another terminal, run accessibility tests
+yarn a11y:all
+```
+
+## Common Scripts
 
 ```json
 "scripts": {
@@ -54,14 +73,10 @@ This project uses Yarn and Vite. Here's a breakdown of what each script does:
 }
 ```
 
-### Development
+### Development & Build
 
 - `yarn start` - Starts the Vite dev server with hot module reload, runs on port 3000.
-
-### Build
-
 - `yarn build` - Runs the TypeScript compiler (`tsc -b`) and builds the project with Vite.
-- `yarn preview` - Serves the built app locally for testing.
 
 ### Code Quality
 
@@ -69,65 +84,3 @@ This project uses Yarn and Vite. Here's a breakdown of what each script does:
 - `yarn format:check` - Checks if files are formatted correctly (fails if not).
 - `yarn lint` - Runs ESLint. Fails on any warning or error.
 - `yarn type-check` - Checks TypeScript types without emitting any files.
-
-## Accessibility
-
-This template includes comprehensive accessibility (a11y) testing tools to ensure your application meets WCAG standards and provides an inclusive user experience.
-
-### Tools Included
-
-- **[Axe Core](https://github.com/dequelabs/axe-core)** - Automated accessibility testing engine
-- **[Pa11y](https://pa11y.org/)** - Command-line accessibility testing tool
-- **[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)** - Performance and accessibility auditing
-
-### Scripts
-
-```bash
-# Run individual accessibility tests
-yarn a11y:axe        # Test with Axe Core
-yarn a11y:pa11y      # Test with Pa11y
-yarn a11y:lighthouse # Test with Lighthouse CI
-
-# Run all accessibility tests
-yarn a11y:all
-
-# Utility scripts
-yarn extract-routes           # Show routes from Router.tsx
-yarn update-lighthouse-config # Update Lighthouse config with current routes
-```
-
-### GitHub Actions Integration
-
-The repository includes automated accessibility testing in CI/CD:
-
-- **Pull Request Comments** - Lighthouse CI posts performance and accessibility results directly to PRs
-- **Multiple Tools** - Each PR is tested with Axe, Pa11y, and Lighthouse
-- **Historical Tracking** - Performance trends are tracked over time
-
-### Local Development
-
-Before pushing changes, run accessibility tests locally:
-
-```bash
-# Start your dev server
-yarn start
-
-# In another terminal, run accessibility tests
-yarn a11y:all
-```
-
-### Configuration
-
-- **Lighthouse settings** - Modify `lighthouserc.json` for performance budgets and thresholds
-- **Route extraction** - Routes are automatically detected from `src/Router.tsx`
-- **CI configuration** - GitHub Actions workflow in `.github/workflows/accessibility.yml`
-
-The accessibility tests automatically extract routes from your `Router.tsx` file, ensuring all pages are tested without manual configuration:
-
-```typescript
-// src/Router.tsx
-const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-  { path: "/about", element: <AboutPage /> }, // ← Automatically tested!
-]);
-```
