@@ -71,9 +71,6 @@ export default function HomePage(): JSX.Element {
           designed with love, using beautiful colors and thoughtful
           accessibility practices.
         </p>
-        <p>
-          <em>Built with accessibility in mind, designed with heart</em>
-        </p>
       </header>
       <main id="main-content" className="page-content" tabIndex={-1}>
         <section aria-labelledby="intro-heading" className="section">
