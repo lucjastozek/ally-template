@@ -3,7 +3,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/ally-template-banner-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/ally-template-banner-light.png">
-  <img alt="Project logo" src="assets/ally-template-banner-light.png" width="3567.5">
+  <img alt="Ally Template logo" src="assets/ally-template-banner-light.png" width="3567.5">
 </picture>
 
 React + Vite template with a focus on accessibility 🩷
