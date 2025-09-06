@@ -1,5 +1,11 @@
 # Ally template
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/ally-template-banner-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/ally-template-banner-light.png">
+  <img alt="Project logo" src="assets/ally-template-banner-light.png" width="3567.5">
+</picture>
+
 React + Vite template with a focus on accessibility 🩷
 
 ## General Info
@@ -84,3 +90,14 @@ yarn a11y:all
 - `yarn format:check` - Checks if files are formatted correctly (fails if not).
 - `yarn lint` - Runs ESLint. Fails on any warning or error.
 - `yarn type-check` - Checks TypeScript types without emitting any files.
+
+---
+
+<picture>
+
+  <source media="(prefers-color-scheme: dark)" srcset="assets/ally-toolkit-banner-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/ally-toolkit-banner-light.png">
+  <img alt="Ally Toolkit logo" src="assets/ally-toolkit-banner-light.png" width="3027.5">
+</picture>
+
+Part of **Ally Toolkit** · _Built with a focus on accessibility 🩷_
