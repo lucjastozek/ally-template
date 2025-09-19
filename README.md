@@ -6,7 +6,7 @@
   <img alt="Ally Template logo" src="assets/ally-template-banner-light.png" width="3567.5">
 </picture>
 
-React + Vite template with a focus on accessibility 🩷
+React + Vite template built with a focus on accessibility 🩷
 
 ## General Info
 
@@ -22,6 +22,8 @@ You don’t need to clone this template manually. You can scaffold a new project
 ```bash
 npx create-ally-app
 ```
+
+![Demonstration of project scaffolding using the create-ally-app command](./assets/create-ally-app.gif)
 
 ## Accessibility Features
 
