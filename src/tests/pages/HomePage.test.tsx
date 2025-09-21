@@ -25,7 +25,9 @@ describe("HomePage", () => {
 
   it("renders the theme toggle button", () => {
     render(<HomePage />);
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /view mode/i })
+    ).toBeInTheDocument();
   });
 
   it("renders color swatches", () => {
@@ -39,7 +41,7 @@ describe("HomePage", () => {
     const user = userEvent.setup();
     render(<HomePage />);
 
-    const toggleButton = screen.getByRole("button");
+    const toggleButton = screen.getByRole("button", { name: /view mode/i });
 
     expect(screen.getByText("Light Mode Colors")).toBeInTheDocument();
 
@@ -53,8 +55,10 @@ describe("HomePage", () => {
   it("has proper accessibility attributes", () => {
     render(<HomePage />);
 
-    const toggleButton = screen.getByRole("button");
-    expect(toggleButton).toHaveAttribute("aria-label");
+    const toggleButton = screen.getByRole("button", { name: /view mode/i });
+    expect(toggleButton).toHaveAttribute("aria-labelledby");
+    expect(toggleButton).toHaveAttribute("aria-describedby");
+    expect(toggleButton).toHaveAttribute("aria-pressed");
   });
 
   it("displays contrast ratios for all colors", () => {

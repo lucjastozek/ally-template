@@ -18,6 +18,7 @@
   --yellow: #ebcd47;
   --yellowRgb: 235, 205, 71;
   --green: #56c876;
+  --greenRgb: 86, 200, 118;
   --darkGreen: #4fb561;
   --blue: #6dc5e2;
   --darkBlue: #3ac2de;
@@ -146,10 +147,6 @@ a::after {
   background: linear-gradient(90deg, var(--orange), var(--yellow));
 }
 
-a:hover::after {
-  width: 100%;
-}
-
 a:hover {
   color: var(--yellow);
 }
@@ -223,6 +220,43 @@ button:disabled:hover:before {
   border-radius: 4px;
 }
 
+.interactive-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(var(--fgRgb), 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.interactive-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(var(--orangeRgb), 0.2);
+  border-color: rgba(var(--orangeRgb), 0.6);
+  background: rgba(var(--orangeRgb), 0.02);
+}
+
+.interactive-button:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+  background: rgba(var(--orangeRgb), 0.05);
+}
+
+.interactive-button:active {
+  transform: translateY(0);
+}
+
+.interactive-button.copied {
+  border-color: var(--green);
+  box-shadow: 0 8px 25px rgba(var(--greenRgb), 0.3);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -246,6 +280,7 @@ button:disabled:hover:before {
     --yellow: #6f5006;
     --yellowRgb: 111, 80, 6;
     --green: #205b33;
+    --greenRgb: 32, 91, 51;
     --darkGreen: #14591d;
     --blue: #0f5a76;
     --darkBlue: #1f4e61;

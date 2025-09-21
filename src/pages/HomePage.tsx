@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ColorSwatch } from "@/components/ColorSwatch";
 import colorStyles from "@/components/ColorSwatch.module.css";
 import styles from "@/pages/HomePage.module.css";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const darkModeColors = [
   { name: "Red", hexCode: "#ee7563", contrastRatio: "7.11:1 AAA" },
@@ -147,17 +149,28 @@ export default function HomePage(): JSX.Element {
             <h3>{currentLabel}</h3>
 
             <div className={colorStyles.colorModeToggle}>
-              <span className={colorStyles.toggleLabel}>View Mode:</span>
+              <span className={colorStyles.toggleLabel} id="color-mode-label">
+                View Mode:
+              </span>
               <button
                 className={`${colorStyles.toggleButton} ${isDarkMode ? colorStyles.darkActive : colorStyles.lightActive}`}
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode colors`}
+                aria-labelledby="color-mode-label"
+                aria-describedby="color-mode-description"
                 aria-pressed={isDarkMode}
+                type="button"
               >
                 <span className={colorStyles.toggleOption}>Dark</span>
                 <span className={colorStyles.toggleOption}>Light</span>
-                <span className={colorStyles.toggleSlider}></span>
+                <span
+                  className={colorStyles.toggleSlider}
+                  aria-hidden="true"
+                ></span>
               </button>
+              <span id="color-mode-description" className={styles.srOnly}>
+                Toggle between dark and light mode color palettes. Currently
+                showing {isDarkMode ? "dark" : "light"} mode colors.
+              </span>
             </div>
           </div>
 
@@ -165,6 +178,8 @@ export default function HomePage(): JSX.Element {
 
           <div
             className={`${colorStyles.colorPaletteGrid} ${isDarkMode ? "" : colorStyles.lightMode}`}
+            role="group"
+            aria-label="Color palette swatches - click any color to copy its hex code"
           >
             {currentColors.map((color) => (
               <ColorSwatch
@@ -176,8 +191,12 @@ export default function HomePage(): JSX.Element {
             ))}
           </div>
 
-          <div className={styles.accessibilityInfo}>
-            <p>
+          <div
+            className={styles.accessibilityInfo}
+            role="complementary"
+            aria-labelledby="accessibility-standards"
+          >
+            <p id="accessibility-standards">
               <strong>Accessibility Standards:</strong>
             </p>
             <ul>
@@ -208,6 +227,42 @@ export default function HomePage(): JSX.Element {
             <li>Include users with disabilities in your design process</li>
             <li>Small details make huge differences in user experience</li>
           </ul>
+
+          <div
+            className={styles.githubSection}
+            role="complementary"
+            aria-labelledby="contributing-heading"
+          >
+            <p id="contributing-heading">
+              <strong>Contributing:</strong>
+            </p>
+            <p>
+              Want to contribute, report issues, or see how this template was
+              built?
+            </p>
+            <a
+              href="https://github.com/lucjastozek/vite-template"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`interactive-button ${styles.githubButton}`}
+              aria-describedby="github-link-description"
+            >
+              <GitHubIcon
+                className={styles.githubIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+              <span>View on GitHub</span>
+              <OpenInNewIcon
+                className={styles.externalIndicator}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            </a>
+            <span id="github-link-description" className={styles.srOnly}>
+              Opens GitHub repository in a new tab
+            </span>
+          </div>
         </section>
       </main>
     </div>
