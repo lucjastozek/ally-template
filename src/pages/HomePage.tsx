@@ -67,11 +67,10 @@ export default function HomePage(): JSX.Element {
         Skip to main content
       </a>
       <header className="page-header">
-        <h1>Welcome!</h1>
+        <h1>Welcome to the Ally Template!</h1>
         <p>
-          This is a warm and accessible React template built with Vite. It's
-          designed with love, using beautiful colors and thoughtful
-          accessibility practices.
+          React + Vite template built with a focus on accessibility to help you
+          build accessible projects!
         </p>
       </header>
       <main id="main-content" className="page-content" tabIndex={-1}>
