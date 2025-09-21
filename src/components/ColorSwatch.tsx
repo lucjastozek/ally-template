@@ -30,7 +30,7 @@ export function ColorSwatch({
       <button
         className={`interactive-button ${styles.colorSwatch} ${copied ? "copied" : ""}`}
         onClick={copyToClipboard}
-        aria-label={`${name} color: ${hexCode}, contrast ratio ${contrastRatio}. Click to copy hex code.`}
+        aria-label="Copy color to clipboard"
         type="button"
       >
         <div
@@ -40,22 +40,17 @@ export function ColorSwatch({
         ></div>
         <div className={styles.colorInfo}>
           <h4>{name}</h4>
-          <code aria-label={`Hex code ${hexCode}`}>{hexCode}</code>
-          <span
-            className={styles.contrastRatio}
-            aria-label={`Contrast ratio ${contrastRatio}`}
-          >
-            {contrastRatio}
-          </span>
+          <code>{hexCode}</code>
+          <span className={styles.contrastRatio}>{contrastRatio}</span>
         </div>
       </button>
 
       {copied &&
         createPortal(
-          <div className="notification notification-success" aria-live="polite">
-            Copied {hexCode} to clipboard!
+          <div className="notification notification-success" aria-live="polite" role="status">
+            Copied color {hexCode} to clipboard
           </div>,
-          document.body,
+          document.body
         )}
     </>
   );
