@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-import HomePage from "@/pages/HomePage";
+import HomePage from "@/pages/home-page/HomePage";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import styles from "@/components/ColorSwatch.module.css";
+import styles from "@/components/color-swatch/ColorSwatch.module.css";
 
 interface ColorSwatchProps {
   name: string;
@@ -47,10 +47,14 @@ export function ColorSwatch({
 
       {copied &&
         createPortal(
-          <div className="notification notification-success" aria-live="polite" role="status">
+          <div
+            className="notification notification-success"
+            aria-live="polite"
+            role="status"
+          >
             Copied color {hexCode} to clipboard
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

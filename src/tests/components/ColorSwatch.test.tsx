@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { ColorSwatch } from "@/components/ColorSwatch";
+import { ColorSwatch } from "@/components/color-swatch/ColorSwatch";
 
 describe("ColorSwatch", () => {
   const mockProps = {

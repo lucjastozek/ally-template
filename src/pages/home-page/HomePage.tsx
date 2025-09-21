@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ColorSwatch } from "@/components/ColorSwatch";
-import colorStyles from "@/components/ColorSwatch.module.css";
-import styles from "@/pages/HomePage.module.css";
+import { ColorSwatch } from "@/components/color-swatch/ColorSwatch";
+import colorStyles from "@/components/color-swatch/ColorSwatch.module.css";
+import styles from "@/pages/home-page/HomePage.module.css";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
