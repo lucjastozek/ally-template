@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { ColorSwatch } from "@/components/ColorSwatch";
-import colorStyles from "@/components/ColorSwatch.module.css";
-import styles from "@/pages/HomePage.module.css";
+import { ColorSwatch } from "@/components/color-swatch/ColorSwatch";
+import colorStyles from "@/components/color-swatch/ColorSwatch.module.css";
+import styles from "@/pages/home-page/HomePage.module.css";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const darkModeColors = [
   { name: "Red", hexCode: "#ee7563", contrastRatio: "7.11:1 AAA" },
@@ -65,11 +67,10 @@ export default function HomePage(): JSX.Element {
         Skip to main content
       </a>
       <header className="page-header">
-        <h1>Welcome!</h1>
+        <h1>Welcome to the Ally Template!</h1>
         <p>
-          This is a warm and accessible React template built with Vite. It's
-          designed with love, using beautiful colors and thoughtful
-          accessibility practices.
+          React + Vite template built with a focus on accessibility to help you
+          build accessible projects!
         </p>
       </header>
       <main id="main-content" className="page-content" tabIndex={-1}>
@@ -147,24 +148,37 @@ export default function HomePage(): JSX.Element {
             <h3>{currentLabel}</h3>
 
             <div className={colorStyles.colorModeToggle}>
-              <span className={colorStyles.toggleLabel}>View Mode:</span>
+              <span className={colorStyles.toggleLabel} id="color-mode-label">
+                View Mode:
+              </span>
               <button
                 className={`${colorStyles.toggleButton} ${isDarkMode ? colorStyles.darkActive : colorStyles.lightActive}`}
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode colors`}
+                aria-labelledby="color-mode-label"
+                aria-describedby="color-mode-description"
                 aria-pressed={isDarkMode}
+                type="button"
               >
                 <span className={colorStyles.toggleOption}>Dark</span>
                 <span className={colorStyles.toggleOption}>Light</span>
-                <span className={colorStyles.toggleSlider}></span>
+                <span
+                  className={colorStyles.toggleSlider}
+                  aria-hidden="true"
+                ></span>
               </button>
+              <span id="color-mode-description" className="sr-only">
+                Toggle between dark and light mode color palettes. Currently
+                showing {isDarkMode ? "dark" : "light"} mode colors.
+              </span>
             </div>
           </div>
 
           <p className={styles.colorDescription}>{currentDescription}</p>
 
           <div
-            className={`${colorStyles.colorPaletteGrid} ${isDarkMode ? "" : colorStyles.lightMode}`}
+            className={`grid-auto-fit ${colorStyles.colorPaletteGrid} ${isDarkMode ? "" : colorStyles.lightMode}`}
+            role="group"
+            aria-label="Color palette swatches - click any color to copy its hex code"
           >
             {currentColors.map((color) => (
               <ColorSwatch
@@ -176,8 +190,12 @@ export default function HomePage(): JSX.Element {
             ))}
           </div>
 
-          <div className={styles.accessibilityInfo}>
-            <p>
+          <div
+            className="card"
+            role="complementary"
+            aria-labelledby="accessibility-standards"
+          >
+            <p id="accessibility-standards">
               <strong>Accessibility Standards:</strong>
             </p>
             <ul>
@@ -208,6 +226,42 @@ export default function HomePage(): JSX.Element {
             <li>Include users with disabilities in your design process</li>
             <li>Small details make huge differences in user experience</li>
           </ul>
+
+          <div
+            className="card"
+            role="complementary"
+            aria-labelledby="contributing-heading"
+          >
+            <p id="contributing-heading">
+              <strong className="github-highlight">Contributing:</strong>
+            </p>
+            <p>
+              Want to contribute, report issues, or see how this template was
+              built?
+            </p>
+            <a
+              href="https://github.com/lucjastozek/vite-template"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`interactive-button ${styles.githubButton}`}
+              aria-describedby="github-link-description"
+            >
+              <GitHubIcon
+                className={styles.githubIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+              <span>View on GitHub</span>
+              <OpenInNewIcon
+                className={styles.externalIndicator}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            </a>
+            <span id="github-link-description" className="sr-only">
+              Opens GitHub repository in a new tab
+            </span>
+          </div>
         </section>
       </main>
     </div>

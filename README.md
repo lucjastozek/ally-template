@@ -93,6 +93,21 @@ yarn a11y:all
 - `yarn lint` - Runs ESLint. Fails on any warning or error.
 - `yarn type-check` - Checks TypeScript types without emitting any files.
 
+# Quick Accessibility Reference
+
+## Common Patterns
+
+- `<button>` for actions, `<a>` for navigation
+- Every form input needs a `<label>`
+- Images need `alt` text (empty `alt=""` for decorative)
+- Use headings in order (h1, h2, h3...)
+
+## Quick Tests
+
+- Tab through your page - does it make sense?
+- Turn off CSS - is content still usable?
+- Run `yarn lint` - fix any a11y warnings
+
 ---
 
 <picture>

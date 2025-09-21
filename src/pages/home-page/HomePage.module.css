@@ -1,0 +1,38 @@
+.colorControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.colorDescription {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: var(--space-lg);
+}
+
+.githubButton {
+  gap: 0.75rem;
+}
+
+.githubButton:hover {
+  color: inherit;
+}
+
+.githubButton:hover * {
+  color: inherit !important;
+}
+
+.githubIcon {
+  display: flex;
+  align-items: center;
+}
+
+.externalIndicator {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
