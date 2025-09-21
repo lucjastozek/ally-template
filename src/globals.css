@@ -214,7 +214,7 @@ button:disabled:hover:before {
 
 .skip-link {
   position: absolute;
-  top: -80px;
+  top: -16rem;
   left: 20px;
   background: var(--orange);
   color: var(--bg);
