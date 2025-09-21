@@ -1,68 +1,17 @@
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .colorControls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .colorDescription {
   font-size: 0.9rem;
   opacity: 0.8;
-  margin-bottom: 1.5rem;
-}
-
-.accessibilityInfo {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background: rgba(var(--fgRgb), 0.05);
-  border: 1px solid rgba(var(--fgRgb), 0.1);
-}
-
-.accessibilityInfo strong {
-  color: var(--green);
-}
-
-.accessibilityInfo p {
-  margin: 0 0 0.5rem 0;
-  font-style: italic;
-}
-
-.accessibilityInfo ul {
-  margin: 0;
-  padding-left: 1.2rem;
-}
-
-.githubSection {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background: rgba(var(--fgRgb), 0.05);
-  border: 1px solid rgba(var(--fgRgb), 0.1);
-}
-
-.githubSection p {
-  margin: 0 0 1rem 0;
-}
-
-.githubSection strong {
-  font-style: italic;
-  color: var(--orange);
+  margin-bottom: var(--space-lg);
 }
 
 .githubButton {

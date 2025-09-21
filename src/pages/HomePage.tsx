@@ -167,7 +167,7 @@ export default function HomePage(): JSX.Element {
                   aria-hidden="true"
                 ></span>
               </button>
-              <span id="color-mode-description" className={styles.srOnly}>
+              <span id="color-mode-description" className="sr-only">
                 Toggle between dark and light mode color palettes. Currently
                 showing {isDarkMode ? "dark" : "light"} mode colors.
               </span>
@@ -177,7 +177,7 @@ export default function HomePage(): JSX.Element {
           <p className={styles.colorDescription}>{currentDescription}</p>
 
           <div
-            className={`${colorStyles.colorPaletteGrid} ${isDarkMode ? "" : colorStyles.lightMode}`}
+            className={`grid-auto-fit ${colorStyles.colorPaletteGrid} ${isDarkMode ? "" : colorStyles.lightMode}`}
             role="group"
             aria-label="Color palette swatches - click any color to copy its hex code"
           >
@@ -192,7 +192,7 @@ export default function HomePage(): JSX.Element {
           </div>
 
           <div
-            className={styles.accessibilityInfo}
+            className="card"
             role="complementary"
             aria-labelledby="accessibility-standards"
           >
@@ -229,12 +229,12 @@ export default function HomePage(): JSX.Element {
           </ul>
 
           <div
-            className={styles.githubSection}
+            className="card"
             role="complementary"
             aria-labelledby="contributing-heading"
           >
             <p id="contributing-heading">
-              <strong>Contributing:</strong>
+              <strong className="github-highlight">Contributing:</strong>
             </p>
             <p>
               Want to contribute, report issues, or see how this template was
@@ -259,7 +259,7 @@ export default function HomePage(): JSX.Element {
                 fontSize="small"
               />
             </a>
-            <span id="github-link-description" className={styles.srOnly}>
+            <span id="github-link-description" className="sr-only">
               Opens GitHub repository in a new tab
             </span>
           </div>

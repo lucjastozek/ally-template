@@ -1,8 +1,4 @@
 .colorPaletteGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
   --swatch-orange: #ea8644;
   --swatch-orange-rgb: 234, 134, 68;
   --swatch-green: #56c876;
@@ -27,63 +23,22 @@
   background: var(--white) !important;
 }
 
-.copiedNotification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: var(--green);
-  color: var(--bg);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  white-space: nowrap;
-  z-index: 9999;
-  box-shadow: 0 8px 25px rgba(var(--blackRgb), 0.3);
-  border: 2px solid var(--white);
-  animation: slideInFromRight 0.3s ease-out;
-  max-width: calc(100vw - 40px);
-  word-break: break-all;
-}
-
-@keyframes slideInFromRight {
-  0% {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@media (max-width: 480px) {
-  .copiedNotification {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    max-width: none;
-    text-align: center;
-    font-size: 0.8rem;
-  }
-}
-
 .colorPreview {
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  margin-bottom: 1rem;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-md);
   border: 3px solid rgba(var(--whiteRgb), 0.2);
-  box-shadow: 0 4px 12px rgba(var(--blackRgb), 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .colorPaletteGrid.lightMode .colorPreview {
   border: 3px solid rgba(var(--blackRgb), 0.2);
-  box-shadow: 0 4px 12px rgba(var(--blackRgb), 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .colorInfo h4 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 var(--space-sm) 0;
   font-size: 1rem;
   font-weight: 600;
   color: var(--white) !important;
@@ -98,10 +53,10 @@
   font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace;
   font-size: 0.85rem;
   color: var(--swatch-orange);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-sm);
   background: rgba(var(--swatch-orange-rgb), 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(var(--swatch-orange-rgb), 0.2);
 }
 
@@ -114,7 +69,7 @@
 .contrastRatio {
   display: inline-block;
   font-size: 0.75rem;
-  padding: 0.25rem 0.6rem;
+  padding: var(--space-xs) 0.6rem;
   border-radius: 20px;
   font-weight: 600;
   background: rgba(var(--swatch-green-rgb), 0.2);
@@ -131,7 +86,7 @@
 .colorModeToggle {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .toggleLabel {
@@ -147,7 +102,7 @@
   align-items: center;
   background: rgba(var(--fgRgb), 0.1);
   border: 2px solid rgba(var(--fgRgb), 0.2);
-  border-radius: 2rem;
+  border-radius: var(--radius-2xl);
   padding: 0.3rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -214,11 +169,6 @@
 }
 
 @media (max-width: 768px) {
-  .colorPaletteGrid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-  }
-
   .colorPreview {
     width: 50px;
     height: 50px;
@@ -230,7 +180,7 @@
 
   .colorModeToggle {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     align-items: center;
   }
 
@@ -250,11 +200,6 @@
 }
 
 @media (max-width: 480px) {
-  .colorPaletteGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-  }
-
   .colorPreview {
     width: 40px;
     height: 40px;

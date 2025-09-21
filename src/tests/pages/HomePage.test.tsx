@@ -26,7 +26,7 @@ describe("HomePage", () => {
   it("renders the theme toggle button", () => {
     render(<HomePage />);
     expect(
-      screen.getByRole("button", { name: /view mode/i })
+      screen.getByRole("button", { name: /view mode/i }),
     ).toBeInTheDocument();
   });
 

@@ -52,10 +52,10 @@ export function ColorSwatch({
 
       {copied &&
         createPortal(
-          <div className={styles.copiedNotification} aria-live="polite">
+          <div className="notification notification-success" aria-live="polite">
             Copied {hexCode} to clipboard!
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );
